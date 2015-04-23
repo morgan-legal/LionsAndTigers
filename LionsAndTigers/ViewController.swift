@@ -15,8 +15,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var ageLabel: UILabel!
     @IBOutlet weak var breedLabel: UILabel!
+    @IBOutlet weak var randomFactLabel: UILabel!
     
     var myTigers:[Tiger] = []
+    
+    var currentIndex = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,7 +28,7 @@ class ViewController: UIViewController {
         var myTiger = Tiger()
         myTiger.name = "Tigger"
         myTiger.breed = "Bengal"
-        myTiger.age = 3
+        myTiger.age = myTiger.ageInTigerYearsFromAge(3)
         myTiger.image = UIImage(named:"BengalTiger.jpg")
         
         println("My Tiger's name is \(myTiger.name), its' age is \(myTiger.age), its' breed is \(myTiger.breed) and its' image is \(myTiger.image)")
@@ -34,7 +37,8 @@ class ViewController: UIViewController {
         nameLabel.text = myTiger.name
         ageLabel.text = "\(myTiger.age)"
         breedLabel.text = myTiger.breed
-
+        randomFactLabel.text = myTiger.randomFact()
+        
         myTigers.append(myTiger)
         
         var secondTiger = Tiger()
@@ -56,6 +60,8 @@ class ViewController: UIViewController {
         forthTiger.image = UIImage(named:"SiberianTiger.jpg")
         
         myTigers += [secondTiger, thirdTiger, forthTiger]
+        
+        println()
     }
 
     override func didReceiveMemoryWarning() {
@@ -65,7 +71,14 @@ class ViewController: UIViewController {
 
     @IBAction func nextBarButtonItemPressed(sender: UIBarButtonItem) {
         
-        let randomIndex = Int(arc4random_uniform(UInt32(myTigers.count)))
+        var randomIndex:Int
+        
+        do{
+            randomIndex = Int(arc4random_uniform(UInt32(myTigers.count)))
+        }while currentIndex == randomIndex
+        
+        currentIndex = randomIndex
+        
         let tiger = myTigers[randomIndex]
         
 //        myImageView.image = tiger.image
@@ -79,7 +92,7 @@ class ViewController: UIViewController {
             self.nameLabel.text = tiger.name
             self.ageLabel.text = "\(tiger.age)"
             self.breedLabel.text = tiger.breed
-            
+            self.randomFactLabel.text = tiger.randomFact()
             }, completion: {
                 (finished: Bool) -> () in
         })
